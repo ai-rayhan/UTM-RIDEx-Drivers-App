@@ -4,16 +4,14 @@ import 'package:flutter/services.dart';
 
 import '../widgets/info_design_ui.dart';
 
-class ProfileTabPage extends StatefulWidget
-{
+class ProfileTabPage extends StatefulWidget {
   const ProfileTabPage({Key? key}) : super(key: key);
 
   @override
   State<ProfileTabPage> createState() => _ProfileTabPageState();
 }
 
-class _ProfileTabPageState extends State<ProfileTabPage>
-{
+class _ProfileTabPageState extends State<ProfileTabPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,7 +20,6 @@ class _ProfileTabPageState extends State<ProfileTabPage>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-
             //username
             Text(
               onlineDriverData!.name!,
@@ -52,7 +49,9 @@ class _ProfileTabPageState extends State<ProfileTabPage>
               ),
             ),
 
-            const SizedBox(height: 38.0,),
+            const SizedBox(
+              height: 38.0,
+            ),
 
             //phone
             InfoDesignUIWidget(
@@ -67,20 +66,25 @@ class _ProfileTabPageState extends State<ProfileTabPage>
             ),
 
             InfoDesignUIWidget(
-              textInfo: onlineDriverData.car_color! + " " + onlineDriverData.car_model! + " " + onlineDriverData.car_number!,
+              textInfo: onlineDriverData.car_color! +
+                  " " +
+                  onlineDriverData.car_model! +
+                  " " +
+                  onlineDriverData.car_number!,
               iconData: Icons.car_repair,
             ),
 
-            const SizedBox(height: 20,),
+            const SizedBox(
+              height: 20,
+            ),
 
             ElevatedButton(
-              onPressed:()
-              {
+              onPressed: () {
                 fAuth.signOut();
                 SystemNavigator.pop();
               },
               style: ElevatedButton.styleFrom(
-                  primary: Colors.redAccent,
+                backgroundColor: Colors.redAccent,
               ),
               child: const Text(
                 "Logout",
