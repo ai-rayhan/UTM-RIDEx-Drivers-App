@@ -106,7 +106,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
     );
   }*/
 
-  ? CarInfoScreen()//return splash screen
+  ? VehicleInfoScreen()//return splash screen
       :Scaffold(
     appBar: AppBar(
       title: Text('Verify Email'),

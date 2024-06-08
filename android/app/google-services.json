@@ -1,37 +1,65 @@
 {
   "project_info": {
-    "project_number": "83735284607",
-    "firebase_url": "https://ride-sharing-application-9de92-default-rtdb.firebaseio.com",
-    "project_id": "ride-sharing-application-9de92",
-    "storage_bucket": "ride-sharing-application-9de92.appspot.com"
+    "project_number": "553055157417",
+    "firebase_url": "https://friendly-folio-425114-v9-default-rtdb.firebaseio.com",
+    "project_id": "friendly-folio-425114-v9",
+    "storage_bucket": "friendly-folio-425114-v9.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:83735284607:android:5bfb0243a42625c619684a",
+        "mobilesdk_app_id": "1:553055157417:android:8f2bad1e8ae2f664693db8",
         "android_client_info": {
-          "package_name": "com.ride.sharingapp"
+          "package_name": "com.example.utm_ridex"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "83735284607-oiiqf8k5l7qm89t9abfknv1qg1frg12s.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDXuJSe50AP1iwQcC3yfRe5GzPyfpBzV5E"
+          "current_key": "AIzaSyASFtzZe2paD0wuoCFjTwMm0l71INI-7N0"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "83735284607-oiiqf8k5l7qm89t9abfknv1qg1frg12s.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:553055157417:android:82e4d55dbb30150a693db8",
+        "android_client_info": {
+          "package_name": "com.ride.sharingapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyASFtzZe2paD0wuoCFjTwMm0l71INI-7N0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:553055157417:android:fa47443b7bfa9f31693db8",
+        "android_client_info": {
+          "package_name": "com.ridesharing.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyASFtzZe2paD0wuoCFjTwMm0l71INI-7N0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
         }
       }
     }

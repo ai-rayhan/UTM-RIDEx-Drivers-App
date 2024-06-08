@@ -4,40 +4,40 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-
-class CarInfoScreen extends StatefulWidget
-{
-  const CarInfoScreen({Key? key}) : super(key: key);
+class VehicleInfoScreen extends StatefulWidget {
+  const VehicleInfoScreen({Key? key}) : super(key: key);
 
   @override
-  State<CarInfoScreen> createState() => _CarInfoScreenState();
+  State<VehicleInfoScreen> createState() => _VehicleInfoScreenState();
 }
 
-
-class _CarInfoScreenState extends State<CarInfoScreen>
-{
-  TextEditingController carModelTextEditingController = TextEditingController();
-  TextEditingController carNumberTextEditingController = TextEditingController();
-  TextEditingController carColorTextEditingController = TextEditingController();
-
+class _VehicleInfoScreenState extends State<VehicleInfoScreen> {
+  TextEditingController vehicleModelTextEditingController = TextEditingController();
+  TextEditingController vehicleNumberTextEditingController = TextEditingController();
+  TextEditingController vehicleColorTextEditingController = TextEditingController();
+  
   List<String> carTypesList = ["Sedan", "Hatchback", "MPV", "SUV"];
-  String? selectedCarType;
+  List<String> bikeTypesList = ["Sport", "Cruiser", "Scooter"];
+  String? selectedVehicleType;
+  String selectedVehicle = 'Car';
+  bool _wantsDelivery = false;
 
   saveCarInfo()
   {
-    Map driverCarInfoMap = //create in firebase realtime database
-    {
-      "car_color": carColorTextEditingController.text.trim(),
-      "car_number": carNumberTextEditingController.text.trim(),
-      "car_model": carModelTextEditingController.text.trim(),
-      "type": selectedCarType,
+    Map driverCarInfoMap = {
+      "car_color": vehicleColorTextEditingController.text.trim(),
+      "car_number": vehicleNumberTextEditingController.text.trim(),
+      "car_model": vehicleModelTextEditingController.text.trim(),
+      "type": selectedVehicleType,
+      "vehicle_category": selectedVehicle,
+      "delivery": _wantsDelivery ? "yes" : "no",
     };
 
     DatabaseReference driversRef = FirebaseDatabase.instance.ref().child("drivers");
-    driversRef.child(currentFirebaseUser!.uid).child("car_details").set(driverCarInfoMap); //pass to specific driver, create sub panel(car detail)
+    driversRef.child(currentFirebaseUser!.uid).child("car_details").set(driverCarInfoMap);
 
-    Fluttertoast.showToast(msg: "Car detail has been saved. Congratulation");
-    Navigator.push(context, MaterialPageRoute(builder: (c)=> const MySplashScreen()));
+    Fluttertoast.showToast(msg: "Car detail has been saved. Congratulations!");
+    Navigator.push(context, MaterialPageRoute(builder: (c) => const MySplashScreen()));
   }
 
   @override
@@ -49,33 +49,27 @@ class _CarInfoScreenState extends State<CarInfoScreen>
           padding: const EdgeInsets.all(24.0),
           child: Column(
             children: [
-
-              const SizedBox(height: 24,),
-
+              const SizedBox(height: 24),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Image.asset("images/logo2.png"),
               ),
-
-              const SizedBox(height: 10,),
-
+              const SizedBox(height: 10),
               const Text(
-                "Fill Car Details",
+                "Fill Vehicle Details",
                 style: TextStyle(
                   fontSize: 26,
                   color: Colors.grey,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-
+              const SizedBox(height: 20),
               TextField(
-                controller: carModelTextEditingController,
-                style: const TextStyle(
-                    color: Colors.grey
-                ),
+                controller: vehicleModelTextEditingController,
+                style: const TextStyle(color: Colors.grey),
                 decoration: const InputDecoration(
-                  labelText: "Car Model",
-                  hintText: "Car Model",
+                  labelText: "Vehicle Model",
+                  hintText: "Vehicle Model",
                   enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.grey),
                   ),
@@ -90,18 +84,14 @@ class _CarInfoScreenState extends State<CarInfoScreen>
                     color: Colors.grey,
                     fontSize: 14,
                   ),
-
                 ),
               ),
-
               TextField(
-                controller: carNumberTextEditingController,
-                style: const TextStyle(
-                    color: Colors.grey
-                ),
+                controller: vehicleNumberTextEditingController,
+                style: const TextStyle(color: Colors.grey),
                 decoration: const InputDecoration(
-                  labelText: "Car Number",
-                  hintText: "Car Number",
+                  labelText: "Vehicle Number",
+                  hintText: "Vehicle Number",
                   enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.grey),
                   ),
@@ -116,18 +106,14 @@ class _CarInfoScreenState extends State<CarInfoScreen>
                     color: Colors.grey,
                     fontSize: 14,
                   ),
-
                 ),
               ),
-
               TextField(
-                controller: carColorTextEditingController,
-                style: const TextStyle(
-                    color: Colors.grey
-                ),
+                controller: vehicleColorTextEditingController,
+                style: const TextStyle(color: Colors.grey),
                 decoration: const InputDecoration(
-                  labelText: "Car Color",
-                  hintText: "Car Color",
+                  labelText: "Vehicle Color",
+                  hintText: "Vehicle Color",
                   enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.grey),
                   ),
@@ -142,52 +128,88 @@ class _CarInfoScreenState extends State<CarInfoScreen>
                     color: Colors.grey,
                     fontSize: 14,
                   ),
-
                 ),
               ),
-
-              const SizedBox(height: 20,),
-
-              DropdownButton(
+              const SizedBox(height: 20),
+              Row(
+                children: [
+                  Expanded(
+                    child: RadioListTile<String>(
+                      title: const Text("Car", style: TextStyle(color: Colors.grey)),
+                      value: 'Car',
+                      groupValue: selectedVehicle,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedVehicle = value!;
+                          selectedVehicleType = null;
+                        });
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    child: RadioListTile<String>(
+                      title: const Text("Bike", style: TextStyle(color: Colors.grey)),
+                      value: 'Bike',
+                      groupValue: selectedVehicle,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedVehicle = value!;
+                          selectedVehicleType = null;
+                        });
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              DropdownButton<String>(
                 iconSize: 26,
-                icon: Icon(Icons.car_rental),
+                icon: const Icon(Icons.adf_scanner),
                 dropdownColor: Colors.black,
-                hint: const Text(
-                  "Please Choose Car Type",
-                  style: TextStyle(
+                hint: Text(
+                  "Please Choose ${selectedVehicle == 'Car' ? 'Car' : 'Bike'} Type",
+                  style: const TextStyle(
                     fontSize: 14.0,
                     color: Colors.grey,
                   ),
                 ),
-                value: selectedCarType,
-                onChanged: (newValue)
-                {
+                value: selectedVehicleType,
+                onChanged: (newValue) {
                   setState(() {
-                    selectedCarType = newValue.toString();
+                    selectedVehicleType = newValue;
                   });
                 },
-                items: carTypesList.map((car){
-                  return DropdownMenuItem(
+                items: (selectedVehicle == 'Car' ? carTypesList : bikeTypesList).map((type) {
+                  return DropdownMenuItem<String>(
+                    value: type,
                     child: Text(
-                      car,
+                      type,
                       style: const TextStyle(color: Colors.grey),
                     ),
-                    value: car,
                   );
                 }).toList(),
               ),
-
-              const SizedBox(height: 20,),
-
+              const SizedBox(height: 20),
+              CheckboxListTile(
+                title: const Text("I want to deliver products", style: TextStyle(color: Colors.grey)),
+                value: _wantsDelivery,
+                onChanged: (value) {
+                  setState(() {
+                    _wantsDelivery = value!;
+                  });
+                },
+                checkColor: Colors.black,
+                activeColor: Colors.grey,
+              ),
+              const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: ()
-                {
-                  if(carColorTextEditingController.text.isNotEmpty
-                      && carNumberTextEditingController.text.isNotEmpty
-                      && carModelTextEditingController.text.isNotEmpty &&selectedCarType != null)
-                    {
-                      saveCarInfo();
-                    }
+                onPressed: () {
+                  if (vehicleColorTextEditingController.text.isNotEmpty &&
+                      vehicleNumberTextEditingController.text.isNotEmpty &&
+                      vehicleModelTextEditingController.text.isNotEmpty &&
+                      selectedVehicleType != null) {
+                    saveCarInfo();
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green,
@@ -200,7 +222,6 @@ class _CarInfoScreenState extends State<CarInfoScreen>
                   ),
                 ),
               ),
-
             ],
           ),
         ),
