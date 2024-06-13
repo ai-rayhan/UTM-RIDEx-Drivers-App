@@ -86,8 +86,10 @@ class _HomeTabPageState extends State<HomeTabPage> {
     });
 
     PushNotificationSystem pushNotificationSystem = PushNotificationSystem();
-    pushNotificationSystem.initializeCloudMessaging(context);
-    pushNotificationSystem.generateAndGetToken();
+    
+    pushNotificationSystem.checkHasRequest(context);
+    // pushNotificationSystem.initializeCloudMessaging(context);
+    // pushNotificationSystem.generateAndGetToken();
 
     AssistantMethods.readDriverEarnings(context);
   }
@@ -201,13 +203,18 @@ class _HomeTabPageState extends State<HomeTabPage> {
     Geofire.setLocation(currentFirebaseUser!.uid,
         driverCurrentPosition!.latitude, driverCurrentPosition!.longitude);
 
-    DatabaseReference ref = FirebaseDatabase.instance
+    
+  DatabaseReference ref = FirebaseDatabase.instance
         .ref()
         .child("drivers")
         .child(currentFirebaseUser!.uid)
         .child("newRideStatus");
 
-    ref.set("idle"); //searching for ride request
+        ref.once()
+        .then((snap) {
+      if (snap.snapshot.value != null && snap.snapshot.value.toString().length<9 ) {
+      ref.set("idle"); //searching for ride request
+      } });
     ref.onValue.listen((event) {});
   }
 

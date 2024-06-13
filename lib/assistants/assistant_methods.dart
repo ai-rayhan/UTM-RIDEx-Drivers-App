@@ -63,8 +63,10 @@ class AssistantMethods
 
   static pauseLiveLocationUpdates()
   {
-    streamSubscriptionPosition!.pause();
+ if(streamSubscriptionPosition!=null){
+      streamSubscriptionPosition!.pause();
     Geofire.removeLocation(currentFirebaseUser!.uid);
+}
   }
 
   static resumeLiveLocationUpdates()

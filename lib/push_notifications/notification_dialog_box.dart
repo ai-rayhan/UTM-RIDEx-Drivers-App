@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:drivers_app/assistants/assistant_methods.dart';
 import 'package:drivers_app/global/global.dart';
@@ -230,7 +232,7 @@ class _NotificationDialogBoxState extends State<NotificationDialogBox> {
       } else {
         Fluttertoast.showToast(msg: "This ride request not exist.");
       }
-
+      log("$getRideRequestId == ${widget.userRideRequestDetails!.rideRequestId}");
       /*print("This is getRideRequestId ::");
        print(getRideRequestId);
        Fluttertoast.showToast(msg: "getRideRequestId = " + getRideRequestId);*/
