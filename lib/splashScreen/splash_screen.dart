@@ -5,6 +5,7 @@ import 'package:drivers_app/authentication/signup_screen.dart';
 import 'package:drivers_app/global/global.dart';
 import 'package:drivers_app/mainScreens/main_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 
 class MySplashScreen extends StatefulWidget {
   const MySplashScreen({Key? key}) : super(key: key);
@@ -37,35 +38,36 @@ class _MySplashScreenState extends State<MySplashScreen> {
     startTimer();
   }
 
-//stack
   @override
   Widget build(BuildContext context) {
     return Material(
       child: Container(
-          color: Colors.black,
+          color: Colors.grey[900],
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset("images/logo2.png"),
-                const SizedBox(
-                  height: 10,
+                Spacer(
+                  flex: 1,
                 ),
-                const Text(
-                  "Welcome to",
-                  //"Ride Sharing Application",
-                  style: TextStyle(
-                      fontSize: 24,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold),
+                Padding(
+                  padding: const EdgeInsets.all(26.0),
+                  child: Lottie.asset("images/splash.json"),
                 ),
-                const Text(
-                  "UTM Ridex",
-                  style: TextStyle(
-                      fontSize: 24,
+                Spacer(),
+                Text(
+                  "UTM Ridex Rider",
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
                       color: Colors.white,
-                      fontWeight: FontWeight.bold),
-                )
+                      fontSize: 35.0,
+                      fontWeight: FontWeight.bold
+                      // fontFamily: 'Agne',
+                      ),
+                ),
+                Spacer(
+                  flex: 1,
+                ),
               ],
             ),
           )),
