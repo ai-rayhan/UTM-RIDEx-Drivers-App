@@ -14,7 +14,7 @@ class _EarningstabPageState extends State<EarningstabPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.grey,
+      color: const Color.fromARGB(255, 183, 182, 182),
       child: Column(
         children: [
           //earnings
@@ -51,47 +51,51 @@ class _EarningstabPageState extends State<EarningstabPage> {
           ),
 
           //total number trips
-          ElevatedButton(
-            onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (c) => TripsHistoryScreen()));
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.orange,
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-              child: Row(
-                children: [
-                  Image.asset(
-                    "images/car_logo.png",
-                    width: 100,
-                  ),
-                  const SizedBox(
-                    width: 6,
-                  ),
-                  const Text(
-                    "Trips Completed",
-                    style: TextStyle(
-                      color: Colors.black54,
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (c) => TripsHistoryScreen()));
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.orange,
+              ),
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                child: Row(
+                  children: [
+                    Image.asset(
+                      "images/car_logo.png",
+                      width: 100,
                     ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      child: Text(
-                        Provider.of<AppInfo>(context, listen: false)
-                            .allTripsHistoryInformationList
-                            .length
-                            .toString(),
-                        textAlign: TextAlign.end,
-                        style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black),
+                    const SizedBox(
+                      width: 6,
+                    ),
+                    const Text(
+                      "Trips Completed",
+                      style: TextStyle(
+                        color: Colors.black54,
                       ),
                     ),
-                  ),
-                ],
+                    Expanded(
+                      child: Container(
+                        child: Text(
+                          Provider.of<AppInfo>(context, listen: false)
+                              .allTripsHistoryInformationList
+                              .length
+                              .toString(),
+                          textAlign: TextAlign.end,
+                          style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

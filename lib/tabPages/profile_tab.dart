@@ -20,11 +20,19 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Image.asset(
+              "images/profile_image.png",
+              height: 150,
+              width: 150,
+            ),
+            SizedBox(
+              height: 20,
+            ),
             //username
             Text(
               onlineDriverData!.name!,
               style: const TextStyle(
-                fontSize: 50.0,
+                fontSize: 25.0,
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
               ),

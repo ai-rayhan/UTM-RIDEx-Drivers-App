@@ -21,9 +21,11 @@ class QRCodeTabPage extends StatefulWidget {
 
 class _QRCodeTabPageState extends State<QRCodeTabPage> {
   String downloadUrlImage = "";
-  String realQrCode = "";
+  String realQrCode =
+      "https://firebasestorage.googleapis.com/v0/b/ride-sharing-application-9de92.appspot.com/o/driversQR%2Fplain%20image.png?alt=media&token=564a9a09-a571-44fb-8bbb-b30f2f19d924";
   XFile? imgXFile;
   final ImagePicker imagePicker = ImagePicker();
+  bool isLoading = false; // Loading state
 
   getImageFromGallery() async {
     imgXFile = await imagePicker.pickImage(source: ImageSource.gallery);
@@ -34,11 +36,14 @@ class _QRCodeTabPageState extends State<QRCodeTabPage> {
   }
 
   formValidation() async {
-    if (imgXFile == null) //image not selected
-    {
+    if (imgXFile == null) {
       Fluttertoast.showToast(msg: "Please select an image");
     } else {
-      //upload image to firebase storage
+      setState(() {
+        isLoading = true; // Start loading
+      });
+
+      // Upload image to Firebase Storage
       String fileName = DateTime.now().microsecondsSinceEpoch.toString();
       fStorage.Reference storageRef = fStorage.FirebaseStorage.instance
           .ref()
@@ -55,15 +60,15 @@ class _QRCodeTabPageState extends State<QRCodeTabPage> {
         downloadUrlImage = urlImage;
       });
 
-      //realtime database
+      // Realtime Database
       DatabaseReference driversRef =
           FirebaseDatabase.instance.ref().child("drivers");
-      driversRef
+      await driversRef
           .child(currentFirebaseUser!.uid)
           .child("photoUrl")
-          .set(downloadUrlImage) as String;
+          .set(downloadUrlImage);
 
-      //save to firestore
+      // Save to Firestore
       FirebaseFirestore.instance
           .collection("drivers")
           .doc(currentFirebaseUser!.uid)
@@ -74,11 +79,16 @@ class _QRCodeTabPageState extends State<QRCodeTabPage> {
         "photoUrl": downloadUrlImage,
       });
 
-      //save locally
+      // Save locally
       sharedPreferences = await SharedPreferences.getInstance();
       await sharedPreferences!.setString("photoUrl", downloadUrlImage);
 
       AssistantMethods.readUrlImageDriver(context);
+      await getRealQrCode();
+      setState(() {
+        isLoading = false; // Stop loading
+        imgXFile = null; // Clear the selected image
+      });
     }
   }
 
@@ -110,85 +120,79 @@ class _QRCodeTabPageState extends State<QRCodeTabPage> {
     super.initState();
 
     readUrlInformation();
+    getRealQrCode();
   }
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Container(
-          color: Colors.black,
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const SizedBox(
-                  height: 100,
-                ),
+        color: Colors.black,
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SizedBox(
+                height: 100,
+              ),
 
-                //capture or get picture qr from gallery
-                GestureDetector(
-                  onTap: () {
-                    getImageFromGallery();
-                  },
-                  child: CircleAvatar(
-                    radius: MediaQuery.of(context).size.width * 0.05,
-                    backgroundColor: Colors.white,
-                    backgroundImage: imgXFile == null
-                        ? null
-                        : FileImage(File(imgXFile!.path)),
-                    child: Icon(
-                      Icons.add_photo_alternate,
-                      color: Colors.grey,
-                      size: MediaQuery.of(context).size.width * 0.05,
-                    ),
+              // Capture or get picture QR from gallery
+              GestureDetector(
+                onTap: () {
+                  getImageFromGallery();
+                },
+                child: CircleAvatar(
+                  radius: MediaQuery.of(context).size.width * 0.08,
+                  backgroundColor: Colors.white,
+                  backgroundImage:
+                      imgXFile == null ? null : FileImage(File(imgXFile!.path)),
+                  child: Icon(
+                    Icons.add_photo_alternate,
+                    color: Colors.grey,
+                    size: MediaQuery.of(context).size.width * 0.05,
                   ),
                 ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
 
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 50, vertical: 12),
-                  ),
-                  onPressed: () {
-                    formValidation();
-                  },
-                  child: const Text(
-                    "Upload QR-Code",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 50, vertical: 12),
+                ),
+                onPressed: () {
+                  formValidation();
+                },
+                child: const Text(
+                  "Upload QR-Code",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              if (isLoading) // Show loading indicator
+                const CircularProgressIndicator(),
 
-                Container(
-                  //see video 12
-                  height: MediaQuery.of(context).size.height * 0.9,
-                  width: MediaQuery.of(context).size.width * 0.9,
-                  child: Image.network(
-                    realQrCode = getRealQrCode(),
-                    //"https://firebasestorage.googleapis.com/v0/b/ride-sharing-application-9de92.appspot.com/o/driversQR%2F1674054226945938?alt=media&token=70e5ab04-2b34-4531-a66f-9293e5386f3c",
-                    //Provider.of<AppInfo>(context, listen: false).driverQRCode,
-                    //onlineDriverData.photo_url! != null
-                    //  ? "https://www.google.com/imgres?imgurl=https%3A%2F%2Fwww.publicdomainpictures.net%2Fpictures%2F30000%2Fnahled%2Fplain-white-background.jpg&imgrefurl=https%3A%2F%2Fwww.publicdomainpictures.net%2Fen%2Fview-image.php%3Fimage%3D28763%26picture%3Dplain-white-background&tbnid=zYz17kVpIDpcMM&vet=12ahUKEwir7O6j4dL8AhVpN7cAHfxHD2EQMygAegUIARDDAQ..i&docid=dvT8b8TucUY-MM&w=615&h=410&q=square%20plain%20white%20image&ved=2ahUKEwir7O6j4dL8AhVpN7cAHfxHD2EQMygAegUIARDDAQ"
-                    //: onlineDriverData.photo_url!
-                  ),
-                  //sharedPreferences!.getString("photoUrl")!,
-                ),
+              Container(
+                height: MediaQuery.of(context).size.height * 0.9,
+                width: MediaQuery.of(context).size.width * 0.9,
+                child: Image.network(realQrCode),
+              ),
 
-                //backgroundImage: onlineDriverData!.photoUrl! == null ? null : FileImage(
-                //File(onlineDriverData!.photoUrl!)),
-                //backgroundImage: NetworkImage(
-                //onlineDriverData!.photoUrl!,
-                //),
-
-                const SizedBox(
-                  height: 10,
-                ),
-              ],
-            ),
-          )),
+              const SizedBox(
+                height: 10,
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
