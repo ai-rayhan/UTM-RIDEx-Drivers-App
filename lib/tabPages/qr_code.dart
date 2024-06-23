@@ -87,6 +87,7 @@ class _QRCodeTabPageState extends State<QRCodeTabPage> {
       await getRealQrCode();
       setState(() {
         isLoading = false; // Stop loading
+        realQrCode = downloadUrlImage; // Update the displayed QR code
         imgXFile = null; // Clear the selected image
       });
     }
@@ -102,13 +103,16 @@ class _QRCodeTabPageState extends State<QRCodeTabPage> {
         .then((snap) {
       if (snap.snapshot.value != null) {
         onlineDriverData.photo_url = (snap.snapshot.value as Map)["photoUrl"];
+        setState(() {
+          realQrCode = onlineDriverData.photo_url!;
+        });
       }
     });
   }
 
   getRealQrCode() {
     if (onlineDriverData.photo_url != null) {
-      return onlineDriverData.photo_url;
+      return onlineDriverData.photo_url!;
     } else {
       return "https://firebasestorage.googleapis.com/v0/b/ride-sharing-application-9de92.appspot.com/o/driversQR%2Fplain%20image.png?alt=media&token=564a9a09-a571-44fb-8bbb-b30f2f19d924";
     }
