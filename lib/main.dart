@@ -1,3 +1,4 @@
+import 'package:drivers_app/assistants/firebase_messaging.dart';
 import 'package:drivers_app/global/global.dart';
 import 'package:drivers_app/infoHandler/app_info.dart';
 import 'package:drivers_app/splashScreen/splash_screen.dart';
@@ -18,8 +19,10 @@ void main() async {
   //plus
   sharedPreferences = await SharedPreferences.getInstance();
 
-  // await Firebase.initializeApp();
   initilizeOnesignal();
+
+  await FirebaseMessagingService().initialize();
+  await FirebaseMessagingService().subscribeToTopic('allDrivers');
 
   runApp(
     MyApp(

@@ -17,89 +17,91 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              "images/profile_image.png",
-              height: 150,
-              width: 150,
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            //username
-            Text(
-              onlineDriverData!.name!,
-              style: const TextStyle(
-                fontSize: 25.0,
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                "images/profile_image.png",
+                height: 150,
+                width: 150,
               ),
-            ),
-
-            Text(
-              titleStarsRating + " driver",
-              style: const TextStyle(
-                fontSize: 18.0,
-                color: Colors.grey,
-                fontWeight: FontWeight.bold,
+              SizedBox(
+                height: 20,
               ),
-            ),
-
-            const SizedBox(
-              height: 20,
-              width: 200,
-              child: Divider(
-                color: Colors.white,
-                height: 2,
-                thickness: 2,
+              //username
+              Text(
+                onlineDriverData!.name!,
+                style: const TextStyle(
+                  fontSize: 25.0,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
 
-            const SizedBox(
-              height: 38.0,
-            ),
-
-            //phone
-            InfoDesignUIWidget(
-              textInfo: onlineDriverData!.phone!,
-              iconData: Icons.phone_iphone,
-            ),
-
-            //email
-            InfoDesignUIWidget(
-              textInfo: onlineDriverData!.email!,
-              iconData: Icons.email,
-            ),
-
-            InfoDesignUIWidget(
-              textInfo: onlineDriverData.car_color! +
-                  " " +
-                  onlineDriverData.car_model! +
-                  " " +
-                  onlineDriverData.car_number!,
-              iconData: Icons.car_repair,
-            ),
-
-            const SizedBox(
-              height: 20,
-            ),
-
-            ElevatedButton(
-              onPressed: () {
-                fAuth.signOut();
-                SystemNavigator.pop();
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.redAccent,
+              Text(
+                titleStarsRating + " driver",
+                style: const TextStyle(
+                  fontSize: 18.0,
+                  color: Colors.grey,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-              child: const Text(
-                "Logout",
-                style: TextStyle(color: Colors.white),
+
+              const SizedBox(
+                height: 20,
+                width: 200,
+                child: Divider(
+                  color: Colors.white,
+                  height: 2,
+                  thickness: 2,
+                ),
               ),
-            )
-          ],
+
+              const SizedBox(
+                height: 38.0,
+              ),
+
+              //phone
+              InfoDesignUIWidget(
+                textInfo: onlineDriverData!.phone!,
+                iconData: Icons.phone_iphone,
+              ),
+
+              //email
+              InfoDesignUIWidget(
+                textInfo: onlineDriverData!.email!,
+                iconData: Icons.email,
+              ),
+
+              InfoDesignUIWidget(
+                textInfo: onlineDriverData.car_color! +
+                    " " +
+                    onlineDriverData.car_model! +
+                    " " +
+                    onlineDriverData.car_number!,
+                iconData: Icons.car_repair,
+              ),
+
+              const SizedBox(
+                height: 20,
+              ),
+
+              ElevatedButton(
+                onPressed: () {
+                  fAuth.signOut();
+                  SystemNavigator.pop();
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.redAccent,
+                ),
+                child: const Text(
+                  "Logout",
+                  style: TextStyle(color: Colors.white),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
