@@ -1,7 +1,11 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart' as fStorage;
+import 'package:fluttertoast/fluttertoast.dart';
 
 class MonthlyORHourlyBasis extends StatefulWidget {
   @override
@@ -16,8 +20,49 @@ class _MonthlyORHourlyBasisState extends State<MonthlyORHourlyBasis> {
 
   String _selectedType = 'Hourly';
   bool _isLoading = false;
+  XFile? imgXFile;
+  final ImagePicker imagePicker = ImagePicker();
+  String? downloadUrlImage;
 
-  void _postVehicle() async {
+  Future<void> getImageFromGallery() async {
+    imgXFile = await imagePicker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      imgXFile;
+    });
+  }
+
+  Future<void> uploadImage() async {
+    if (imgXFile == null) {
+      Fluttertoast.showToast(msg: "Please select an image");
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    String fileName = DateTime.now().microsecondsSinceEpoch.toString();
+    fStorage.Reference storageRef = fStorage.FirebaseStorage.instance
+        .ref()
+        .child("rentalImages")
+        .child(fileName);
+
+    fStorage.UploadTask uploadImageTask =
+        storageRef.putFile(File(imgXFile!.path));
+    fStorage.TaskSnapshot taskSnapshot =
+        await uploadImageTask.whenComplete(() {});
+    downloadUrlImage = await taskSnapshot.ref.getDownloadURL();
+
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  Future<void> _postVehicle() async {
+    if (imgXFile != null && downloadUrlImage == null) {
+      await uploadImage();
+    }
+
     setState(() {
       _isLoading = true;
     });
@@ -41,6 +86,7 @@ class _MonthlyORHourlyBasisState extends State<MonthlyORHourlyBasis> {
         'vehicle_type': vehicleType,
         'vehicle_model': vehicleModel,
         'contact': contact,
+        'imgurl': downloadUrlImage,
       }),
     );
 
@@ -63,6 +109,8 @@ class _MonthlyORHourlyBasisState extends State<MonthlyORHourlyBasis> {
     _vehicleTypeController.clear();
     _vehicleModelController.clear();
     _contactController.clear();
+    imgXFile = null;
+    downloadUrlImage = null;
   }
 
   void _showSuccessDialog() {
@@ -137,6 +185,23 @@ class _MonthlyORHourlyBasisState extends State<MonthlyORHourlyBasis> {
               controller: _contactController,
               decoration: InputDecoration(labelText: 'Contact'),
               keyboardType: TextInputType.phone,
+            ),
+            SizedBox(height: 20),
+            GestureDetector(
+              onTap: () {
+                getImageFromGallery();
+              },
+              child: CircleAvatar(
+                radius: MediaQuery.of(context).size.width * 0.08,
+                backgroundColor: Colors.grey,
+                backgroundImage:
+                    imgXFile == null ? null : FileImage(File(imgXFile!.path)),
+                child: Icon(
+                  Icons.add_photo_alternate,
+                  color: Colors.white,
+                  size: MediaQuery.of(context).size.width * 0.05,
+                ),
+              ),
             ),
             SizedBox(height: 20),
             _isLoading
