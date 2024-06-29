@@ -5,11 +5,54 @@ import 'package:drivers_app/global/global.dart';
 import 'package:drivers_app/models/user_ride_Request_information.dart';
 import 'package:drivers_app/push_notifications/notification_dialog_box.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class PushNotificationSystem {
+
+   FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+  Future initializeCloudMessaging(BuildContext context) async
+  {
+    //1. terminated - when app completely close n opened direct from app noti
+    FirebaseMessaging.instance.getInitialMessage().then((RemoteMessage? remoteMessage){
+      if(remoteMessage != null)
+        {
+          //display ride request info from user
+
+              checkHasRequest(context);
+        }
+    });
+
+    //2. foreground - when app is open and receive notification
+    FirebaseMessaging.onMessage.listen((RemoteMessage? remoteMessage) {
+
+     checkHasRequest(context);
+    });
+
+    //3. background - when app in background n open direct from app noti
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage? remoteMessage) {
+
+        checkHasRequest(context);
+    });
+  }
+
+ Future generateAndGetToken() async
+  {
+    String? registrationToken = await messaging.getToken();
+    print("FCM Registration Token: ");
+    print(registrationToken);
+
+
+    FirebaseDatabase.instance.ref().child("drivers")
+        .child(currentFirebaseUser!.uid)
+        .child("token").set(registrationToken);
+
+    messaging.subscribeToTopic("allDrivers");
+    messaging.subscribeToTopic("allUsers");
+  }
   checkHasRequest(BuildContext context) {
     String getRideRequestId = "";
     FirebaseDatabase.instance
