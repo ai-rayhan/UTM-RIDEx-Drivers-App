@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:drivers_app/global/global.dart';
+import 'package:drivers_app/mainScreens/main_screen.dart';
 import 'package:drivers_app/models/user_ride_Request_information.dart';
 import 'package:drivers_app/push_notifications/notification_dialog_box.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -22,20 +23,35 @@ class PushNotificationSystem {
         {
           //display ride request info from user
 
-              checkHasRequest(context);
-        }
+
+       Navigator.pushReplacement<void, void>(
+    context,
+    MaterialPageRoute<void>(
+      builder: (BuildContext context) =>  MainScreen(),
+    ),
+  );        }
     });
 
     //2. foreground - when app is open and receive notification
     FirebaseMessaging.onMessage.listen((RemoteMessage? remoteMessage) {
 
-     checkHasRequest(context);
-    });
+
+       Navigator.pushReplacement<void, void>(
+    context,
+    MaterialPageRoute<void>(
+      builder: (BuildContext context) =>  MainScreen(),
+    ),
+  );    });
 
     //3. background - when app in background n open direct from app noti
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage? remoteMessage) {
 
-        checkHasRequest(context);
+       Navigator.pushReplacement<void, void>(
+    context,
+    MaterialPageRoute<void>(
+      builder: (BuildContext context) =>  MainScreen(),
+    ),
+  );
     });
   }
 
