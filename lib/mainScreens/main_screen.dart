@@ -106,7 +106,7 @@ class _MainScreenState extends State<MainScreen>
             label: "Account",
           ),
         ],
-        unselectedItemColor: Colors.purple,
+        unselectedItemColor: Color(0Xff5D001D),
         selectedItemColor: Colors.white,
         backgroundColor: Colors.orange,
         type: BottomNavigationBarType.fixed,
